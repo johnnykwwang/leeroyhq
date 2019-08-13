@@ -1,4 +1,5 @@
 import { updateSolvedProblemList, initializeDb } from './updater.js';
+import { generateRandomProblem } from './random.js';
 const { App } = require('@slack/bolt');
 
 // Initializes your app with your bot token and signing secret
@@ -9,6 +10,10 @@ const app = new App({
 
 app.message("update", ({ message, say }) => {
   updateSolvedProblemList(app, message.channel);
+});
+
+app.message("random", ({ message, say }) => {
+  generateRandomProblem(app, message.channel);
 });
 
 (async () => {
