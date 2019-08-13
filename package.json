@@ -1,0 +1,19 @@
+{
+  "name": "leetcode-slackbot",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^1.2.0",
+    "cheerio": "^1.0.0-rc.3",
+    "esm": "^3.2.25",
+    "lowdb": "^1.0.0",
+    "request": "^2.88.0"
+  }
+}
