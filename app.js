@@ -1,5 +1,5 @@
 import { updateSolvedProblemList, initializeDb } from './updater.js';
-import { generateRandomProblem } from './random.js';
+//import { generateRandomProblem } from './random.js';
 const { App } = require('@slack/bolt');
 
 // Initializes your app with your bot token and signing secret

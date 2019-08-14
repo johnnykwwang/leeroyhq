@@ -26,6 +26,18 @@ function buildMessage(username, probName, probUrl){
     ]
   };
 
+async function defaultMessageToSlack(app,channelId){
+  try{ 
+    const result = await app.client.chat.postMessage({
+      token: process.env.LC_SLACK_BOT_TOKEN,
+      channel: channelId,
+      text: "Updating..."
+    });
+  }
+  catch( error ){
+    console.log( error );
+  }
+}
 
 async function newSolvedProblemToSlack(app, username, probName, probUrl, channelId){
   try{ 
@@ -33,8 +45,6 @@ async function newSolvedProblemToSlack(app, username, probName, probUrl, channel
       token: process.env.LC_SLACK_BOT_TOKEN,
       channel: channelId,
       blocks: buildMessage(username, probName, probUrl)
-      // text: username + " just solved *" + probName + "* ! \n ",
-      // attachments: [ { 'text': 'https://www.leetcode.com' + probUrl } ]
     });
   }
   catch( error ){
@@ -54,7 +64,7 @@ function updateUser(username, slackApp, channelId){
       const probUrl = $(this).attr('href').trim();
       console.log(probName);
       if(status=="Accepted" &&
-          !userRecord.has('solved.'+probName).value()
+        !userRecord.has('solved.'+probName).value()
       ){
         newSolvedProblemToSlack(slackApp, userRecord.value().username, probName, probUrl, channelId);
         userRecord.set('solved.'+probName, true).write();
@@ -69,6 +79,7 @@ export async function initializeDb(){
 
 export async function updateSolvedProblemList(slackApp, channelId ) {
   var trackedUsers = db.get('trackedUsers').value();
+  defaultMessageToSlack(slackApp, channelId);
   for ( const user of trackedUsers ){
     console.log(user.username)
     const url = 'https://leetcode.com/' + user.username ; 
