@@ -31,7 +31,7 @@ async function defaultMessageToSlack(app,channelId){
     const result = await app.client.chat.postMessage({
       token: process.env.LC_SLACK_BOT_TOKEN,
       channel: channelId,
-      text: "Updating..."
+      text: "Updating, I'm a friendly frog..."
     });
   }
   catch( error ){

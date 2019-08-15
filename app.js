@@ -1,5 +1,5 @@
 import { updateSolvedProblemList, initializeDb } from './updater.js';
-//import { generateRandomProblem } from './random.js';
+import { fetchAllLeetcodeProblem } from './fetch.js';
 const { App } = require('@slack/bolt');
 
 // Initializes your app with your bot token and signing secret
@@ -8,12 +8,12 @@ const app = new App({
   signingSecret: process.env.LC_SLACK_SIGNING_SECRET
 });
 
-app.message("update", ({ message, say }) => {
+app.message(/^update$/, ({ message, say }) => {
   updateSolvedProblemList(app, message.channel);
 });
 
-app.message("random", ({ message, say }) => {
-  generateRandomProblem(app, message.channel);
+app.message(/^fetch$/, ({ message, say }) => {
+  fetchAllLeetcodeProblem(app, message.channel);
 });
 
 (async () => {
