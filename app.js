@@ -1,6 +1,15 @@
 import { updateSolvedProblemList, initializeDb } from './updater.js';
-import { fetchAllLeetcodeProblem } from './fetch.js';
+import { fetchAllLeetcodeProblems } from './fetch.js';
 const { App } = require('@slack/bolt');
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('db.json')
+const db = low(adapter)
+const cheerio = require('cheerio')
+
+function initializeDb(){
+  db.defaults({ trackedUsers: [] }).write();
+}
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -9,11 +18,11 @@ const app = new App({
 });
 
 app.message(/^update$/, ({ message, say }) => {
-  updateSolvedProblemList(app, message.channel);
+  updateSolvedProblemList(app, db, message.channel);
 });
 
 app.message(/^fetch$/, ({ message, say }) => {
-  fetchAllLeetcodeProblem(app, message.channel);
+  fetchAllLeetcodeProblems(app, db, message.channel);
 });
 
 (async () => {

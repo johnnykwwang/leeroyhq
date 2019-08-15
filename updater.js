@@ -1,9 +1,4 @@
 const request = require('request');
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-const adapter = new FileSync('db.json')
-const db = low(adapter)
-const cheerio = require('cheerio')
 
 function buildMessage(username, probName, probUrl){
   return [
@@ -52,7 +47,7 @@ async function newSolvedProblemToSlack(app, username, probName, probUrl, channel
   }
 }
 
-function updateUser(username, slackApp, channelId){
+function updateUser(username, slackApp, db,  channelId){
   return function handleRequest(error, response, body){
     // console.log('body:' + body);
     const $ = cheerio.load(body);
@@ -73,16 +68,12 @@ function updateUser(username, slackApp, channelId){
   }
 }
 
-export async function initializeDb(){
-  db.defaults({ trackedUsers: [] }).write();
-}
-
-export async function updateSolvedProblemList(slackApp, channelId ) {
+export async function updateSolvedProblemList(slackApp, db, channelId ) {
   var trackedUsers = db.get('trackedUsers').value();
   defaultMessageToSlack(slackApp, channelId);
   for ( const user of trackedUsers ){
     console.log(user.username)
     const url = 'https://leetcode.com/' + user.username ; 
-    request(url, updateUser(user.username,slackApp, channelId));
+    request(url, updateUser(user.username,slackApp, db, channelId));
   }
 }
